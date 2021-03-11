@@ -3,12 +3,14 @@
 const User = require("./users/model");
 // bring express into project
 const express = require("express");
-
+const cors = require("cors");
 const server = express();
 
 // search request body for JSON string and convert JSON string
 // from request body into object and save that object a req.body
 server.use(express.json());
+
+server.use(cors());
 
 // POST request to create a user
 // Crud CREATE
