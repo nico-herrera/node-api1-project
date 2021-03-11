@@ -16,14 +16,14 @@ server.post("/api/users", async (req, res) => {
   const user = req.body;
 
   // check to make sure body is valid
-  if (!user.name || !user.body) {
+  if (!user.name || !user.bio) {
     // if not valid, respond with error code
     res
       .status(400)
       .json({ message: "Please provide name and bio for the user" });
   } else {
     try {
-      const newUser = await User.create(user);
+      const newUser = await User.insert(user);
       res.status(201).json({ newUser });
     } catch (err) {
       // not sure why we ended up here, but better send a 500 error
@@ -49,9 +49,9 @@ server.get("/api/users", async (req, res) => {
 
 // GET request for a specific user
 server.get("/api/users/:id", async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
-    const user = await User.findByID(id);
+    const user = await User.findById(id);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -62,7 +62,8 @@ server.get("/api/users/:id", async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ message: "The user information could not be retrieved" });
+      //   .json({ message: "The user information could not be retrieved" });
+      .json({ message: err.message });
   }
 });
 
@@ -100,7 +101,7 @@ server.put("/api/users/:id", async (req, res) => {
     try {
       let updatedUser = await User.update(id, changes);
       if (updatedUser) {
-        res.status(200).json(updated);
+        res.status(200).json(updatedUser);
       } else {
         res
           .status(404)
