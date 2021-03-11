@@ -2,11 +2,13 @@
 // import  data model to interact with data
 const User = require("./users/model");
 // bring express into project
-const expres = require("express");
+const express = require("express");
+
+const server = express();
 
 // search request body for JSON string and convert JSON string
 // from request body into object and save that object a req.body
-server.use(expres.json());
+server.use(express.json());
 
 // POST request to create a user
 // Crud CREATE
@@ -25,11 +27,9 @@ server.post("/api/users", async (req, res) => {
       res.status(201).json({ newUser });
     } catch (err) {
       // not sure why we ended up here, but better send a 500 error
-      res
-        .status(500)
-        .json({
-          message: "There was an error while saving the user to the database",
-        });
+      res.status(500).json({
+        message: "There was an error while saving the user to the database",
+      });
     }
   }
 });
@@ -48,11 +48,11 @@ server.get("/api/users", async (req, res) => {
 });
 
 // GET request for a specific user
-server.get("/api/user/:id", async (req, res) => {
+server.get("/api/users/:id", async (req, res) => {
   const { id } = req.body;
   try {
     const user = await User.findByID(id);
-    if (id) {
+    if (user) {
       res.status(200).json(user);
     } else {
       res
